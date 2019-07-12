@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "210514155731",
+    "firebase_url": "https://pocketalert-8a870.firebaseio.com",
+    "project_id": "pocketalert-8a870",
+    "storage_bucket": "pocketalert-8a870.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210514155731:android:62e53be6611913b2",
+        "android_client_info": {
+          "package_name": "orbital.gns.pocketalert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210514155731-5s2jq7sovapvk9f6kig6f5a1622omr7b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "orbital.gns.pocketalert",
+            "certificate_hash": "8b95bbc95e87e1a8def2cdcf62e22a6e9b370d16"
+          }
+        },
+        {
+          "client_id": "210514155731-cgpfsf1gm4j3j14f0s1nbrtkj1ks15ls.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4vi8w-wASsxf4Ajd-TRxoZb5TnzeE5xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210514155731-cgpfsf1gm4j3j14f0s1nbrtkj1ks15ls.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
