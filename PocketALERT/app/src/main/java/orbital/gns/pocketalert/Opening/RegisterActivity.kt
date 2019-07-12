@@ -1,4 +1,4 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Opening
 
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_register.*
 import orbital.gns.pocketalert.Others.User
+import orbital.gns.pocketalert.R
 import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -20,10 +21,6 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
-        val name = editText_name.text.toString()
-        val email = editText_email.text.toString()
-        val password = editText_password.text.toString()
 
         registerButton.setOnClickListener {
             registerUser()

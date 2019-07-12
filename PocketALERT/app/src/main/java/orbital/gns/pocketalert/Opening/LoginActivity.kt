@@ -1,4 +1,4 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Opening
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login.*
+import orbital.gns.pocketalert.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -37,6 +39,8 @@ class LoginActivity : AppCompatActivity() {
         }
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
+                val uid = FirebaseAuth.getInstance().uid
+                FirebaseDatabase.getInstance().reference.child("users").child("$uid").child("online").setValue(true)
                 val intent = Intent(this, MainMenuActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)

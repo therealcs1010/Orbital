@@ -9,24 +9,28 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".FriendsListActivity">
+        <activity android:name=".StatusUpdates.FriendsStatus">
         </activity>
-        <activity android:name=".FriendsProfileActivity">
+        <activity android:name=".StatusUpdates.StatusUpdateActivity">
         </activity>
-        <activity android:name=".AddFriendsActivity">
+        <activity android:name=".Friends.FriendsListActivity">
         </activity>
-        <activity android:name=".MyProfileActivity">
+        <activity android:name=".Friends.FriendsProfileActivity">
         </activity>
-        <activity android:name=".MainMenuActivity">
+        <activity android:name=".Friends.AddFriendsActivity">
+        </activity>
+        <activity android:name=".Profile.MyProfileActivity">
+        </activity>
+        <activity android:name=".Opening.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".Opening.RegisterActivity">
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".Opening.LoginActivity">
         </activity>
     </application>
 

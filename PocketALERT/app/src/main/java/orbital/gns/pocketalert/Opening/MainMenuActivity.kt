@@ -1,10 +1,15 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Opening
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_menu.*
+import orbital.gns.pocketalert.Friends.FriendsListActivity
+import orbital.gns.pocketalert.Profile.MyProfileActivity
+import orbital.gns.pocketalert.R
+import orbital.gns.pocketalert.StatusUpdates.StatusUpdateActivity
 
 class MainMenuActivity : AppCompatActivity() {
 
@@ -32,7 +37,9 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         button_status_updates.setOnClickListener {
-
+            val intent = Intent(this, StatusUpdateActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
 
         button_add_friends.setOnClickListener {
@@ -56,6 +63,8 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
+        val uid = FirebaseAuth.getInstance().uid
+        FirebaseDatabase.getInstance().reference.child("users").child("$uid").child("online").setValue(false)
         FirebaseAuth.getInstance().signOut()
     }
 }

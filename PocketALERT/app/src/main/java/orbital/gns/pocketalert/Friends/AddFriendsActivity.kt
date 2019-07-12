@@ -1,4 +1,4 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Friends
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_add_friends.*
 import orbital.gns.pocketalert.Others.User
+import orbital.gns.pocketalert.R
 import java.io.Serializable
 
 class AddFriendsActivity : AppCompatActivity() {
@@ -41,7 +42,6 @@ class AddFriendsActivity : AppCompatActivity() {
             return
         }
         val ref = FirebaseDatabase.getInstance().getReference("/users")
-        var found : Boolean ?= false
         if (name.isNotEmpty())
         {
             ref.addListenerForSingleValueEvent(object: ValueEventListener {

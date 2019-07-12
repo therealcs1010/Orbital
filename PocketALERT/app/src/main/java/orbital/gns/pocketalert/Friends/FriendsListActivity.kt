@@ -1,4 +1,4 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Friends
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -11,8 +11,10 @@ import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_friends_list.*
+import orbital.gns.pocketalert.Opening.MainMenuActivity
 import orbital.gns.pocketalert.Others.User
 import orbital.gns.pocketalert.Others.UserItem
+import orbital.gns.pocketalert.R
 
 class FriendsListActivity : AppCompatActivity() {
 

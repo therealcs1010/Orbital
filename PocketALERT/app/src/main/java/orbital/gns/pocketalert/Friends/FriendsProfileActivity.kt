@@ -1,6 +1,5 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Friends
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,6 +11,7 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_friends_profile.*
 import orbital.gns.pocketalert.Others.User
+import orbital.gns.pocketalert.R
 
 class FriendsProfileActivity : AppCompatActivity() {
 

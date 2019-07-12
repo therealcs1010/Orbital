@@ -1,4 +1,4 @@
-package orbital.gns.pocketalert
+package orbital.gns.pocketalert.Profile
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -11,7 +11,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_my_profile.*
+import orbital.gns.pocketalert.Opening.MainMenuActivity
 import orbital.gns.pocketalert.Others.User
+import orbital.gns.pocketalert.R
 
 class MyProfileActivity : AppCompatActivity() {
 
