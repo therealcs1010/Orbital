@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".MainMenuActivity" android:background="@android:color/holo_blue_bright">
     <Button
-            android:text="Add Friends"
+            android:text="Friends"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:id="@+id/button_add_friends"
@@ -20,31 +20,18 @@
             android:paddingLeft="20dp" android:drawableRight="@android:drawable/ic_menu_call"
             android:paddingEnd="10dp"/>
     <Button
-            android:text="Quick Call"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:id="@+id/button_quick_call"
-            app:layout_constraintStart_toStartOf="@+id/button_nearby_alert"
-            app:layout_constraintEnd_toEndOf="@+id/button_nearby_alert"
-            app:layout_constraintHorizontal_bias="0.542"
-            android:background="@drawable/roundedbuttoncorners" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/button_nearby_alert" android:textSize="20sp"
-            android:textColor="@android:color/white" android:textStyle="bold" android:textAlignment="textStart"
-            android:paddingLeft="20dp" android:drawableRight="@android:drawable/ic_menu_call"
-            android:paddingEnd="10dp"/>
-    <Button
             android:text="Status Updates"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:id="@+id/button_status_updates"
-            app:layout_constraintStart_toStartOf="@+id/button_quick_call"
-            app:layout_constraintEnd_toEndOf="@+id/button_quick_call"
-            app:layout_constraintHorizontal_bias="0.542"
-            android:background="@drawable/roundedbuttoncorners" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/button_quick_call" android:textSize="20sp"
+            android:background="@drawable/roundedbuttoncorners"
+            android:textSize="20sp"
             android:textColor="@android:color/white" android:textStyle="bold" android:textAlignment="textStart"
             android:paddingLeft="20dp" android:drawableRight="@android:drawable/ic_menu_call"
-            android:paddingEnd="10dp"/>
+            android:paddingEnd="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/button_nearby_alert"
+            app:layout_constraintStart_toStartOf="@+id/button_nearby_alert" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/button_nearby_alert"/>
     <Button
             android:text="Nearby Alert"
             android:layout_width="0dp"

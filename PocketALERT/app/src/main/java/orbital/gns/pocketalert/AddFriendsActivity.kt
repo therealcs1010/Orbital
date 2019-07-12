@@ -1,27 +1,33 @@
 package orbital.gns.pocketalert
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_friends.*
+import kotlinx.android.synthetic.main.activity_add_friends.*
 import orbital.gns.pocketalert.Others.User
+import java.io.Serializable
 
-class FriendsActivity : AppCompatActivity() {
+class AddFriendsActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_friends)
+        setContentView(R.layout.activity_add_friends)
 
         search_button.setOnClickListener {
             friendsSearch()
         }
 
         back_button.setOnClickListener {
-            finish()
+            val intent = Intent(this, FriendsListActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
     }
 
@@ -31,12 +37,11 @@ class FriendsActivity : AppCompatActivity() {
         val email = editText_email.text.toString()
         if (name.isEmpty() && number.isEmpty() && email.isEmpty())
         {
-            Toast.makeText(this@FriendsActivity, "Please input at least one field", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AddFriendsActivity, "Please input at least one field", Toast.LENGTH_SHORT).show()
             return
         }
         val ref = FirebaseDatabase.getInstance().getReference("/users")
-        var friend : User ?= null
-        var found = false
+        var found : Boolean ?= false
         if (name.isNotEmpty())
         {
             ref.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -49,13 +54,9 @@ class FriendsActivity : AppCompatActivity() {
                         val user = it.getValue(User::class.java)
                         if (user!!.username == name)
                         {
-                            friend = user
-                            found = true
-                            return
+                            getInfo(user)
                         }
                     }
-                    Toast.makeText(this@FriendsActivity, "Could not find friend", Toast.LENGTH_SHORT).show()
-                    return
                 }
             })
         }
@@ -71,13 +72,10 @@ class FriendsActivity : AppCompatActivity() {
                         val user = it.getValue(User::class.java)
                         if (user!!.phoneNumber == number)
                         {
-                            friend = user
-                            found = true
-                            return
+                            getInfo(user)
                         }
                     }
-                    Toast.makeText(this@FriendsActivity, "Could not find friend", Toast.LENGTH_SHORT).show()
-                    return
+
                 }
             })
         }
@@ -89,23 +87,28 @@ class FriendsActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    p0.children.forEach {
-                        val user = it.getValue(User::class.java)
+                    for (child in p0.children){
+                        val user = child.getValue(User::class.java)
                         if (user!!.email == email)
                         {
-                            friend = user
-                            found = true
-                            return
+                            Log.d("debug","found")
+                            getInfo(user)
                         }
                     }
-                    Toast.makeText(this@FriendsActivity, "Could not find friend", Toast.LENGTH_SHORT).show()
-                    return
+
                 }
             })
         }
-        if (!found) return
 
+    }
 
-
+    private fun getInfo(friend : User) {
+        Toast.makeText(this@AddFriendsActivity, "Found friend", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, FriendsProfileActivity::class.java)
+        intent.putExtra("friend", friend as Serializable)
+        editText_name.setText("")
+        editText_email.setText("")
+        editText_number.setText("")
+        startActivity(intent)
     }
 }

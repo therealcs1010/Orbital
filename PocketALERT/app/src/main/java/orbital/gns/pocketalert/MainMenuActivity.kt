@@ -26,22 +26,24 @@ class MainMenuActivity : AppCompatActivity() {
         button_call_authorities.setOnClickListener {
 
         }
+
         button_nearby_alert.setOnClickListener {
 
         }
-        button_quick_call.setOnClickListener {
 
-        }
         button_status_updates.setOnClickListener {
 
         }
+
         button_add_friends.setOnClickListener {
-            val intent = Intent(this, FriendsActivity::class.java)
+            val intent = Intent(this, FriendsListActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        
+
         button_my_profile.setOnClickListener {
             val intent = Intent(this, MyProfileActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
