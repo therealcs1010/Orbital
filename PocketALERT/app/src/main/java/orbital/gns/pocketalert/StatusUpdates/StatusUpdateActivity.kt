@@ -44,5 +44,6 @@ class StatusUpdateActivity : AppCompatActivity() {
         }
         FirebaseDatabase.getInstance().reference.child("users").child("$uid").child("status").setValue(status)
         Toast.makeText(this@StatusUpdateActivity, "Status updated!", Toast.LENGTH_SHORT).show()
+        editText_status_updates.setText("")
     }
 }

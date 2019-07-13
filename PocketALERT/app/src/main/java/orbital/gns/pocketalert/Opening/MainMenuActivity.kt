@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import orbital.gns.pocketalert.Friends.FriendsListActivity
+import orbital.gns.pocketalert.PhoneCalls.PhoneDirectoryActivity
 import orbital.gns.pocketalert.Profile.MyProfileActivity
 import orbital.gns.pocketalert.R
 import orbital.gns.pocketalert.StatusUpdates.StatusUpdateActivity
@@ -29,7 +30,9 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         button_call_authorities.setOnClickListener {
-
+            val intent = Intent(this, PhoneDirectoryActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
 
         button_nearby_alert.setOnClickListener {

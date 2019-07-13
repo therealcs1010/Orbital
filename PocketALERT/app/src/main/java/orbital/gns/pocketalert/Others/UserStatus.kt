@@ -14,14 +14,14 @@ class UserStatus(private val user : User) : Item<ViewHolder>() {
         Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.myprofilePic)
         viewHolder.itemView.textView_status.text = user.status
         Log.d("debug", "${viewHolder.itemView.textView_status.text}")
-//        if (user.online!!)
-//        {
-//            viewHolder.itemView.MyprofilePic.borderColor = 255
-//        }
-//        else
-//        {
-//            viewHolder.itemView.MyprofilePic.borderColor = 0
-//        }
+        if (user.online!!)
+        {
+            viewHolder.itemView.myprofilePic.borderWidth = 15
+        }
+        else
+        {
+            viewHolder.itemView.myprofilePic.borderColor = 0
+        }
     }
 
     override fun getLayout(): Int {

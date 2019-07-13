@@ -39,14 +39,16 @@ class MyProfileActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                     val user = p0.getValue(User::class.java)
-                    Log.d("debug", "${user.toString()}")
+                    Log.d("debug", "$user")
                     if (user!!.uid == uid)
                     {
                         textView_username.text = "Username : ${user.username}"
-                        textView_email.text = "Email : ${user.email}"
+                        textView_number.text = "Email : ${user.email}"
                         textView_password.text = "Password : ${user.password}"
                         textView_phonenumber.text = "Phone Number : ${user.phoneNumber}"
-                        Picasso.get().load(user.profileImageUrl).into(MyprofilePic)
+                        textView_status.text = "Status : ${user.status}"
+                        Log.d("debug", "$user.status")
+                        Picasso.get().load(user.profileImageUrl).into(MyprofilePic_for_call)
                         return
                     }
             }

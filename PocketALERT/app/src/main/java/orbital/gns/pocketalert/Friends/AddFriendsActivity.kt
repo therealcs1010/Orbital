@@ -104,7 +104,7 @@ class AddFriendsActivity : AppCompatActivity() {
 
     private fun getInfo(friend : User) {
         Toast.makeText(this@AddFriendsActivity, "Found friend", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, FriendsProfileActivity::class.java)
+        val intent = Intent(this, AddFriendsProfileActivity::class.java)
         intent.putExtra("friend", friend as Serializable)
         editText_name.setText("")
         editText_email.setText("")

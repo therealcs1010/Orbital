@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_friends_profile.*
 import orbital.gns.pocketalert.Others.User
 import orbital.gns.pocketalert.R
 
-class FriendsProfileActivity : AppCompatActivity() {
+class AddFriendsProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,10 +21,10 @@ class FriendsProfileActivity : AppCompatActivity() {
 
         val friend = intent.extras.get("friend") as User
         textView_username.text = "Username : ${friend.username}"
-        textView_email.text = "Email : ${friend.email}"
-        Picasso.get().load(friend.profileImageUrl).into(MyprofilePic)
+        textView_number.text = "Email : ${friend.email}"
+        Picasso.get().load(friend.profileImageUrl).into(MyprofilePic_for_call)
 
-        addFriendButton.setOnClickListener {
+        callButton.setOnClickListener {
             val uid = FirebaseAuth.getInstance().uid //my user id
             //To update the Hashmap for friend and to update Firebase
             FirebaseDatabase.getInstance().getReference("/users/$uid")
@@ -34,7 +34,7 @@ class FriendsProfileActivity : AppCompatActivity() {
                         myUser!!.friends[friend.uid] = friend.uid
                         FirebaseDatabase.getInstance().reference.child("users").child("$uid").setValue(myUser)
 //                        Log.d("debug", "${myUser.toString()}")
-                        Toast.makeText(this@FriendsProfileActivity, "Added as friend", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@AddFriendsProfileActivity, "Added as friend", Toast.LENGTH_SHORT).show()
                         finish()
                     }
                     override fun onCancelled(p0: DatabaseError) {
@@ -43,7 +43,7 @@ class FriendsProfileActivity : AppCompatActivity() {
                 })
 
 
-            Toast.makeText(this@FriendsProfileActivity, "Added as friend", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AddFriendsProfileActivity, "Added as friend", Toast.LENGTH_SHORT).show()
 
         }
         backButton.setOnClickListener {

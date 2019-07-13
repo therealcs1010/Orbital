@@ -3,6 +3,7 @@ package orbital.gns.pocketalert.Friends
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,6 +16,7 @@ import orbital.gns.pocketalert.Opening.MainMenuActivity
 import orbital.gns.pocketalert.Others.User
 import orbital.gns.pocketalert.Others.UserItem
 import orbital.gns.pocketalert.R
+import orbital.gns.pocketalert.StatusUpdates.StatusUpdateActivity
 
 class FriendsListActivity : AppCompatActivity() {
 
@@ -63,9 +65,18 @@ class FriendsListActivity : AppCompatActivity() {
                                     }
                                 })
                         }
-                        recycler_view_for_friends.adapter = adapter
-
                     }
+
+                    adapter.setOnItemClickListener { item, view ->
+                        val friend = item as UserItem
+                        val intent = Intent(view.context, ViewFriendProfileActivity::class.java)
+                        intent.putExtra("friend", friend.user.username)
+                        intent.putExtra("friendno", friend.user.phoneNumber)
+                        intent.putExtra("friendimg", friend.user.profileImageUrl)
+                        intent.putExtra("friendemail", friend.user.email)
+                        startActivity(intent)
+                    }
+                    recycler_view_for_friends.adapter = adapter
                 }
             })
     }
