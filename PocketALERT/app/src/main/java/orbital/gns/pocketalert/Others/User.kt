@@ -8,4 +8,6 @@ class User (val uid : String, val username : String , val profileImageUrl : Stri
     var status : String ?= "I am fine."
     var online : Boolean ?= true
     var friendReqs : HashMap<String, String> = HashMap()
+    var longitude : Double ?= null
+    var latitude : Double ?= null
 }
