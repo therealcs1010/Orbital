@@ -8,7 +8,7 @@
         tools:context=".PhoneCalls.PhoneDirectoryActivity" android:background="@android:color/holo_blue_bright">
 
     <TextView
-            android:text="Phone Directory"
+            android:text="Quick Call"
             android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_marginTop="32dp"

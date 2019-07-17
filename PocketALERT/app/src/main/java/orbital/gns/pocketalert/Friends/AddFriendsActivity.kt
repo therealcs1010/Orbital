@@ -51,6 +51,7 @@ class AddFriendsActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
+
                     p0.children.forEach {
                         val user = it.getValue(User::class.java)
                         if (user!!.username == name)
@@ -86,7 +87,6 @@ class AddFriendsActivity : AppCompatActivity() {
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
-
                 override fun onDataChange(p0: DataSnapshot) {
                     for (child in p0.children){
                         val user = child.getValue(User::class.java)
@@ -100,6 +100,12 @@ class AddFriendsActivity : AppCompatActivity() {
                 }
             })
         }
+
+        Toast.makeText(this@AddFriendsActivity, "User Not Found", Toast.LENGTH_SHORT).show()
+        editText_name.setText("")
+        editText_email.setText("")
+        editText_number.setText("")
+        return
 
     }
 

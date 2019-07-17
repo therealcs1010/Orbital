@@ -51,16 +51,13 @@ class PhoneDirectoryActivity : AppCompatActivity() {
                         val usernamefriend = it.getValue(String::class.java)
                         if (usernamefriend != null)
                         {
-
                             FirebaseDatabase.getInstance().getReference("/users/$usernamefriend")
                                 .addValueEventListener(object : ValueEventListener {
-
                                     override fun onDataChange(p0: DataSnapshot) {
                                         val friend = p0.getValue(User::class.java)
                                         adapter.add(UserCall(friend!!))
                                         Log.d("debug", "Here i am")
                                     }
-
                                     override fun onCancelled(p0: DatabaseError) {
 
                                     }
@@ -73,7 +70,6 @@ class PhoneDirectoryActivity : AppCompatActivity() {
                     val temp2 = User("","SCDF", "", "995", "", "")
                     adapter.add(UserCall(temp1))
                     adapter.add(UserCall(temp2))
-
                     adapter.setOnItemClickListener { item, view ->
                         val friend = item as UserCall
                         val intent = Intent(view.context , FriendCallActivity::class.java)
@@ -84,7 +80,6 @@ class PhoneDirectoryActivity : AppCompatActivity() {
                         Log.d("debug", "Clicked!")
                         startActivity(intent)
                     }
-
                     recyclerView_contacts.adapter = adapter
                 }
             })
