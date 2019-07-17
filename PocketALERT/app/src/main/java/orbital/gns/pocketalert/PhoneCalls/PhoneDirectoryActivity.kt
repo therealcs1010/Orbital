@@ -68,8 +68,11 @@ class PhoneDirectoryActivity : AppCompatActivity() {
 
                     val temp1 = User("","Police", "", "999", "", "")
                     val temp2 = User("","SCDF", "", "995", "", "")
+                    val temp3 = User("","Campus Security", "", "6874 1616", "", "")
+
                     adapter.add(UserCall(temp1))
                     adapter.add(UserCall(temp2))
+                    adapter.add(UserCall(temp3))
                     adapter.setOnItemClickListener { item, view ->
                         val friend = item as UserCall
                         val intent = Intent(view.context , FriendCallActivity::class.java)
