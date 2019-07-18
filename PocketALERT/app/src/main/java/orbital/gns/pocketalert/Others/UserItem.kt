@@ -9,9 +9,9 @@ import orbital.gns.pocketalert.R
 
 class UserItem(val user : User): Item<ViewHolder>() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
+        Log.d("debug", "OK")
         viewHolder.itemView.textView_username.text = user.username
         Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.MyprofilePic_for_call)
-        Log.d("debug", "DOne")
     }
 
     override fun getLayout(): Int {

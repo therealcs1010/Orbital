@@ -5,6 +5,45 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Location.LocationActivity">
+        tools:context=".Location.LocationActivity" android:background="@android:color/holo_blue_bright">
 
+    <TextView
+            android:text="Location"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:textAlignment="center"
+            android:background="@drawable/roundedheader" android:textStyle="bold" android:textSize="50sp"
+            android:textColor="@android:color/background_light" app:layout_constraintHorizontal_bias="0.0"
+            android:id="@+id/textView7"/>
+    <Button
+            android:text="Send location"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:id="@+id/sendLocationButton" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp" android:layout_marginTop="184dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" app:layout_constraintHorizontal_bias="0.501"
+            android:background="@drawable/roundedbuttoncorners" android:textStyle="bold" android:textSize="20sp"
+            android:textColor="@android:color/background_light"/>
+    <Button
+            android:text="Get location"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:id="@+id/getLocationButton" app:layout_constraintEnd_toEndOf="@+id/sendLocationButton"
+            app:layout_constraintStart_toStartOf="@+id/sendLocationButton" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/sendLocationButton"
+            android:background="@drawable/roundedbuttoncorners"
+            android:textStyle="bold" android:textSize="20sp" android:textColor="@android:color/background_light"/>
+    <Button
+            android:text="BACK"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:id="@+id/backButton" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/getLocationButton"
+            app:layout_constraintEnd_toEndOf="@+id/getLocationButton"
+            app:layout_constraintStart_toStartOf="@+id/getLocationButton"
+            android:background="@drawable/roundedbuttoncorners"
+            android:textStyle="bold" android:textSize="20sp" android:textColor="@android:color/background_light"/>
 </android.support.constraint.ConstraintLayout>
