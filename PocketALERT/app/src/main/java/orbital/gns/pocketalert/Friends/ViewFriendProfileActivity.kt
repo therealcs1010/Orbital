@@ -1,6 +1,6 @@
 package orbital.gns.pocketalert.Friends
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_view_friend_profile.*

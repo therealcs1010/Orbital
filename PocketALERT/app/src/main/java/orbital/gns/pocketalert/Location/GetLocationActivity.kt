@@ -1,7 +1,7 @@
 package orbital.gns.pocketalert.Location
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -57,14 +57,12 @@ class GetLocationActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener { item, view ->
             val friend = item as UserItem
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.putExtra("friend", friend.user)
+            startActivity(intent)
         }
         friendsRecyclerView.adapter = adapter
 
     }
 
-    private fun getClass(key: String): User {
-        var friend : User ?= null
-
-        return friend!!
-    }
 }

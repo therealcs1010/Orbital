@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Opening.RegisterActivity" android:background="@android:color/holo_blue_bright">
+        tools:context=".Opening.RegisterActivity" android:background="@drawable/background">
 
     <EditText
             android:layout_width="0dp"
@@ -93,4 +93,4 @@
             app:layout_constraintEnd_toEndOf="@+id/registerButton" android:background="@drawable/roundedbuttoncorners"
             android:textColor="@android:color/background_light" android:textSize="20sp" android:textStyle="bold"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
