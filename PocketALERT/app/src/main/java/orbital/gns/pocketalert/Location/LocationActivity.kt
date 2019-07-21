@@ -28,28 +28,17 @@ import orbital.gns.pocketalert.PhoneCalls.PhoneDirectoryActivity
 import orbital.gns.pocketalert.R
 
 
-private const val PERMISSION_REQUEST = 10
+
 class LocationActivity : AppCompatActivity() {
 
-    private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+
     val uid = FirebaseAuth.getInstance().uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
         //Log.d("debug", "Created")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if (!checkPermission(permissions)) {
-                requestPermissions(permissions, PERMISSION_REQUEST)
-            }
-        }
-        if (!checkPermission(permissions))
-        {
-            val intent = Intent(this, MainMenuActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
+
         FirebaseDatabase.getInstance().getReference("users/$uid")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -58,7 +47,7 @@ class LocationActivity : AppCompatActivity() {
 
                 override fun onDataChange(p0: DataSnapshot) {
                     val myUser = p0.getValue(User::class.java)
-                    getLocationButton.setText("GET LOCATION(${myUser!!.friendsLong.size})" )
+                    getLocationButton.setText("GET LOCATION(${myUser!!.friendsLocation.size})" )
                 }
             })
         sendLocationButton.setOnClickListener {
@@ -80,16 +69,7 @@ class LocationActivity : AppCompatActivity() {
 
     }
 
-    private fun checkPermission(permissionArray : Array<String>) : Boolean {
-        var allSuccess = true
-        for (i in permissionArray.indices) {
-            if (checkCallingOrSelfPermission(permissionArray[i]) == PackageManager.PERMISSION_DENIED)
-            {
-                allSuccess = false
-            }
-        }
-        return allSuccess
-    }
+
 
 
 

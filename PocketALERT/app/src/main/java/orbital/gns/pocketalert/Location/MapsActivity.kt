@@ -2,25 +2,26 @@ package orbital.gns.pocketalert.Location
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import com.google.android.gms.maps.*
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import orbital.gns.pocketalert.Others.User
 import orbital.gns.pocketalert.R
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private var friend = intent.extras.get("friend") as User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -38,10 +39,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
 
     override fun onMapReady(googleMap: GoogleMap) {
+        var friendUser = intent.extras.get("friend") as User
+        var me = intent.extras.get("me") as User
+        Log.d("debug", "cool")
+//        var friend : User ?= null
+//        FirebaseDatabase.getInstance().getReference("/users/$frienduid")
+//            .addListenerForSingleValueEvent(object: ValueEventListener {
+//                override fun onCancelled(p0: DatabaseError) {
+//
+//                }
+//
+//                override fun onDataChange(p0: DataSnapshot) {
+//                    friend = p0.getValue(User::class.java)
+//                }
+//            })
         mMap = googleMap
+        //Log.d("debug", friendUser!!.latitude.toString())
         // Add a marker in Sydney and move the camera
-        val friend = LatLng(friend.latitude!!, friend.longitude!!)
-        mMap.addMarker(MarkerOptions().position(friend).title( "friend"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(friend))
+        val myfriend = LatLng(friendUser!!.latitude!!, friendUser!!.longitude!!)
+        val meme = LatLng(me!!.latitude!!, me!!.longitude!!)
+        mMap.addMarker(MarkerOptions().position(myfriend).title( "${friendUser.username}"))
+        mMap.addMarker(MarkerOptions().position(meme).title("Me"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myfriend, 15f))
     }
 }

@@ -78,8 +78,7 @@ class SendLocationActivity : AppCompatActivity() {
                     }
                     adapter.setOnItemClickListener { item, view ->
                         val friend = item as UserItem
-                        friend.user.friendsLong[uid.toString()]= finalCoord!!.first
-                        friend.user.friendsLat[uid.toString()] = finalCoord!!.second
+                        friend.user.friendsLocation[uid.toString()]= uid.toString()
                         FirebaseDatabase.getInstance().reference.child("users").child(friend.user.uid).setValue(friend.user)
 
                         Toast.makeText(this@SendLocationActivity, "Sent Location to ${friend.user.username}", Toast.LENGTH_SHORT).show()
@@ -170,10 +169,10 @@ class SendLocationActivity : AppCompatActivity() {
 
     private fun myLocations(locationGps: Location?, locationNetwork: Location?) {
         if (locationGps != null && locationNetwork != null) {
-            if (locationGps!!.accuracy > locationNetwork!!.accuracy) {
-                updateLocation(locationNetwork!!.longitude, locationNetwork!!.latitude)
+            if (locationGps.accuracy > locationNetwork.accuracy) {
+                updateLocation(locationNetwork.longitude, locationNetwork.latitude)
             } else {
-                updateLocation(locationGps!!.longitude, locationGps!!.latitude)
+                updateLocation(locationGps.longitude, locationGps.latitude)
             }
         }
         else if (locationGps == null)

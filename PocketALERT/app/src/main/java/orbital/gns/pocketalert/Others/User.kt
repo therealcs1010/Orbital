@@ -10,6 +10,5 @@ class User (val uid : String, val username : String , val profileImageUrl : Stri
     var friendReqs : HashMap<String, String> = HashMap()
     var longitude : Double ?= null
     var latitude : Double ?= null
-    var friendsLat : HashMap< String, Double> = HashMap()
-    var friendsLong : HashMap<String, Double> = HashMap()
+    var friendsLocation : HashMap< String, String> = HashMap()
 }

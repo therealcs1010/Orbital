@@ -19,10 +19,16 @@ import orbital.gns.pocketalert.R
 class GetLocationActivity : AppCompatActivity() {
 
     val uid = FirebaseAuth.getInstance().uid
+    var user : User ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_get_location)
 
+        backButton2.setOnClickListener {
+            val intent = Intent(this, LocationActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
         val adapter = GroupAdapter<ViewHolder>()
         FirebaseDatabase.getInstance().getReference("users/$uid")
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -32,9 +38,9 @@ class GetLocationActivity : AppCompatActivity() {
 
                 override fun onDataChange(p0: DataSnapshot) {
 
-                    val user = p0.getValue(User::class.java)
+                    user = p0.getValue(User::class.java)
                     Log.d("debug", "hw")
-                    user!!.friendsLong.forEach {
+                    user!!.friendsLocation.forEach {
 
                         val frienduid = it.key
                         FirebaseDatabase.getInstance().getReference("users/$frienduid")
@@ -57,8 +63,9 @@ class GetLocationActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener { item, view ->
             val friend = item as UserItem
-            val intent = Intent(this, MapsActivity::class.java)
+            val intent = Intent(view.context , MapsActivity::class.java)
             intent.putExtra("friend", friend.user)
+            intent.putExtra("me", user)
             startActivity(intent)
         }
         friendsRecyclerView.adapter = adapter

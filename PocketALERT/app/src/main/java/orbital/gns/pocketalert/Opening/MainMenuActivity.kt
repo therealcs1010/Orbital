@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import orbital.gns.pocketalert.Friends.FriendsListActivity
+import orbital.gns.pocketalert.Location.CheckLocationPermissionActivity
 import orbital.gns.pocketalert.Location.LocationActivity
 import orbital.gns.pocketalert.Others.User
 import orbital.gns.pocketalert.PhoneCalls.PhoneDirectoryActivity
@@ -55,7 +56,7 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         button_nearby_alert.setOnClickListener {
-            val intent = Intent(this, LocationActivity::class.java)
+            val intent = Intent(this, CheckLocationPermissionActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
