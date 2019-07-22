@@ -1,19 +1,26 @@
 package orbital.gns.pocketalert.Opening
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import orbital.gns.pocketalert.Friends.FriendsListActivity
 import orbital.gns.pocketalert.Location.LocationActivity
+import orbital.gns.pocketalert.Location.SendLocationActivity
 import orbital.gns.pocketalert.PhoneCalls.PhoneDirectoryActivity
 import orbital.gns.pocketalert.Profile.MyProfileActivity
 import orbital.gns.pocketalert.R
 import orbital.gns.pocketalert.StatusUpdates.StatusUpdateActivity
 
 class MainMenuActivity : AppCompatActivity() {
+
+    private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +43,16 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         button_nearby_alert.setOnClickListener {
-            val intent = Intent(this, LocationActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                requestMultiplePermissions()
+            }
+            else
+            {
+                loadActivity()
+            }
         }
 
         button_status_updates.setOnClickListener {
@@ -71,5 +85,35 @@ class MainMenuActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().uid
         FirebaseDatabase.getInstance().reference.child("users").child("$uid").child("online").setValue(false)
         FirebaseAuth.getInstance().signOut()
+    }
+    private fun requestMultiplePermissions() {
+        val rPermissions = permissions.filter {checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED}
+        requestPermissions(rPermissions.toTypedArray(), 101)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101)
+        {
+            if (grantResults.any{ it != PackageManager.PERMISSION_GRANTED}) {
+                if (permissions.any{ shouldShowRequestPermissionRationale(it)}) {
+                    AlertDialog.Builder(this)
+                        .setMessage("Your error message here")
+                        .setPositiveButton("Allow") { dialog, which -> requestMultiplePermissions() }
+                        .setNegativeButton("Cancel") { dialog, which -> dialog.dismiss() }
+                        .create()
+                        .show()
+                    return
+                }
+
+            }
+        }
+        loadActivity()
+    }
+
+    private fun loadActivity() {
+        val intent = Intent(this, LocationActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

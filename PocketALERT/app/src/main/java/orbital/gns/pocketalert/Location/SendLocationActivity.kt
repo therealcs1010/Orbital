@@ -26,20 +26,12 @@ import orbital.gns.pocketalert.R
 
 class SendLocationActivity : AppCompatActivity() {
 
-    private var hasGps = false
-    private var hasNetwork = false
-    lateinit var locationManager : LocationManager
-    private var locationGps : Location ?= null
-    private var locationNetwork : Location ?= null
-    var finalCoord : Pair<Double, Double> ?= Pair(-1.00, -1.00)
+
     val uid = FirebaseAuth.getInstance().uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_location)
-
-        getLocation()
-
         backButton.setOnClickListener {
             val intent = Intent(this, LocationActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -89,107 +81,6 @@ class SendLocationActivity : AppCompatActivity() {
             })
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (hasGps || hasNetwork) {
-            if (hasGps) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    5000,
-                    0F,
-                    object : LocationListener {
-                        override fun onLocationChanged(location: Location?) {
-                            if (location != null) {
-                                Log.d("debug", "here for gps!")
-                                locationGps = location
-                            }
-                            myLocations(locationGps, locationNetwork)
-                        }
 
-                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-                        }
-
-                        override fun onProviderEnabled(provider: String?) {
-
-                        }
-
-                        override fun onProviderDisabled(provider: String?) {
-
-                        }
-                    })
-
-                val localGpslocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-                if (localGpslocation != null) {
-                    locationGps = localGpslocation
-                }
-            }
-            if (hasNetwork) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    5000,
-                    0F,
-                    object : LocationListener {
-                        override fun onLocationChanged(location: Location?) {
-                            if (location != null) {
-                                Log.d("debug", "here for network!")
-                                locationNetwork = location
-                            }
-                            myLocations(locationGps, locationNetwork)
-                        }
-
-                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-                        }
-
-                        override fun onProviderEnabled(provider: String?) {
-
-                        }
-
-                        override fun onProviderDisabled(provider: String?) {
-
-                        }
-                    })
-                val localGpsNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (localGpsNetwork != null) {
-                    locationNetwork = localGpsNetwork
-                }
-            }
-
-        }
-        else
-        {
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-        }
-    }
-
-    private fun myLocations(locationGps: Location?, locationNetwork: Location?) {
-        if (locationGps != null && locationNetwork != null) {
-            if (locationGps.accuracy > locationNetwork.accuracy) {
-                updateLocation(locationNetwork.longitude, locationNetwork.latitude)
-            } else {
-                updateLocation(locationGps.longitude, locationGps.latitude)
-            }
-        }
-        else if (locationGps == null)
-        {
-            updateLocation(locationNetwork!!.longitude, locationNetwork!!.latitude)
-        }
-        else if (locationNetwork == null)
-        {
-            updateLocation(locationGps!!.longitude, locationGps!!.latitude)
-        }
-    }
-
-    private fun updateLocation(longitude: Double, latitude: Double) {
-        val uid = FirebaseAuth.getInstance().uid
-        finalCoord = Pair(longitude, latitude)
-        FirebaseDatabase.getInstance().reference.child("users").child(uid!!).child("latitude").setValue(latitude)
-        FirebaseDatabase.getInstance().reference.child("users").child(uid!!).child("longitude").setValue(longitude)
-    }
 
 }
