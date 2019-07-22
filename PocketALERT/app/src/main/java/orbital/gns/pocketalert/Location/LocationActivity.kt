@@ -16,6 +16,7 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,7 +34,7 @@ class LocationActivity : AppCompatActivity() {
 
 
     val uid = FirebaseAuth.getInstance().uid
-
+    private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
@@ -50,10 +51,18 @@ class LocationActivity : AppCompatActivity() {
                     getLocationButton.setText("GET LOCATION(${myUser!!.friendsLocation.size})" )
                 }
             })
+
+
         sendLocationButton.setOnClickListener {
-            val intent = Intent(this, SendLocationActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                {
+                    requestMultiplePermissions()
+                }
+            else
+            {
+                loadActivity()
+            }
         }
 
         getLocationButton.setOnClickListener {
@@ -69,9 +78,35 @@ class LocationActivity : AppCompatActivity() {
 
     }
 
+    private fun requestMultiplePermissions() {
+        val rPermissions = permissions.filter {checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED}
+        requestPermissions(rPermissions.toTypedArray(), 101)
+    }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101)
+        {
+            if (grantResults.any{ it != PackageManager.PERMISSION_GRANTED}) {
+                if (permissions.any{ shouldShowRequestPermissionRationale(it)}) {
+                    AlertDialog.Builder(this)
+                        .setMessage("Your error message here")
+                        .setPositiveButton("Allow") { dialog, which -> requestMultiplePermissions() }
+                        .setNegativeButton("Cancel") { dialog, which -> dialog.dismiss() }
+                        .create()
+                        .show()
+                    return
+                }
 
+            }
+        }
+        loadActivity()
+    }
 
-
+    private fun loadActivity() {
+        val intent = Intent(this, SendLocationActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
 
 }

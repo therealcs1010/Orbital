@@ -4,15 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_main_menu.*
 import orbital.gns.pocketalert.Friends.FriendsListActivity
-import orbital.gns.pocketalert.Location.CheckLocationPermissionActivity
 import orbital.gns.pocketalert.Location.LocationActivity
-import orbital.gns.pocketalert.Others.User
 import orbital.gns.pocketalert.PhoneCalls.PhoneDirectoryActivity
 import orbital.gns.pocketalert.Profile.MyProfileActivity
 import orbital.gns.pocketalert.R
@@ -34,21 +29,6 @@ class MainMenuActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-
-//        FirebaseDatabase.getInstance().getReference("/users/$uid").addValueEventListener(object : ValueEventListener {
-//            override fun onCancelled(p0: DatabaseError) {
-//                //
-//            }
-//
-//            override fun onDataChange(p0: DataSnapshot) {
-//                val id = p0.getValue(User::class.java)
-//                if (id!!.friendReqs.isEmpty())
-//                button_add_friends.text = "FRIENDS"
-//                else
-//                button_add_friends.text = "FRIENDS(${id.friendReqs.size})"
-//            }
-//        })
-
         button_call_authorities.setOnClickListener {
             val intent = Intent(this, PhoneDirectoryActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -56,7 +36,7 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         button_nearby_alert.setOnClickListener {
-            val intent = Intent(this, CheckLocationPermissionActivity::class.java)
+            val intent = Intent(this, LocationActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
