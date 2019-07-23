@@ -11,12 +11,15 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.os.PersistableBundle
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,17 +36,31 @@ import orbital.gns.pocketalert.R
 class LocationActivity : AppCompatActivity() {
 
     val uid = FirebaseAuth.getInstance().uid
-    private var hasGps = false
-    private var hasNetwork = false
-    lateinit var locationManager : LocationManager
-    private var locationGps : Location ?= null
-    private var locationNetwork : Location ?= null
+    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
+    private val INTERVAL: Long = 2000
+    private val FASTEST_INTERVAL: Long = 100
+    lateinit var mLastLocation: Location
+    internal lateinit var mLocationRequest: LocationRequest
     var firstUpdate = true
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            // do work here
+            locationResult.lastLocation
+            onLocationChanged(locationResult.lastLocation)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
-        //Log.d("debug", "Created")
-        Toast.makeText(this@LocationActivity, "Please wait till we track your location...", Toast.LENGTH_LONG).show()
+        mLocationRequest = LocationRequest()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps()
+        }
+        startLocationUpdates()
+        Toast.makeText(this@LocationActivity, "Retrieving coordinates, Do not leave this page...", Toast.LENGTH_SHORT).show()
         FirebaseDatabase.getInstance().getReference("users/$uid")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -56,20 +73,22 @@ class LocationActivity : AppCompatActivity() {
                 }
             })
 
-        getLocation()
 
         sendLocationButton.setOnClickListener {
+            stoplocationUpdates()
             val intent = Intent(this, SendLocationActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
         getLocationButton.setOnClickListener {
+            stoplocationUpdates()
             val intent = Intent(this, GetLocationActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
         backButton.setOnClickListener {
+            stoplocationUpdates()
             val intent = Intent(this, MainMenuActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
@@ -77,121 +96,75 @@ class LocationActivity : AppCompatActivity() {
 
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (hasGps || hasNetwork) {
-            if (hasGps) {
-                //Toast.makeText(this@LocationActivity, "Uploading coordinates to database..", Toast.LENGTH_SHORT).show()
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    100,
-                    0F,
-                    object : LocationListener {
-                        override fun onLocationChanged(location: Location?) {
-                          //  Toast.makeText(this@LocationActivity, "wahoo", Toast.LENGTH_SHORT).show()
-                            if (location != null) {
-                                locationGps = location
-                            }
-                            myLocations(locationGps, locationNetwork)
-                        }
+    private fun buildAlertMessageNoGps() {
 
-                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-                        }
-
-                        override fun onProviderEnabled(provider: String?) {
-
-                        }
-
-                        override fun onProviderDisabled(provider: String?) {
-                            Toast.makeText(this@LocationActivity, "Nope", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-
-                val localGpslocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-                if (localGpslocation != null) {
-                    locationGps = localGpslocation
-                }
-
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    , 11)
             }
-            if (hasNetwork) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    100,
-                    0F,
-                    object : LocationListener {
-                        override fun onLocationChanged(location: Location?) {
-                            //Toast.makeText(this@LocationActivity, "wahoo", Toast.LENGTH_SHORT).show()
-                            if (location != null) {
-                                Log.d("debug", "here for network!")
-                                locationNetwork = location
-                            }
-                            myLocations(locationGps, locationNetwork)
-                        }
-
-                        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-                        }
-
-                        override fun onProviderEnabled(provider: String?) {
-
-                        }
-
-                        override fun onProviderDisabled(provider: String?) {
-                            Toast.makeText(this@LocationActivity, "Nope", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                val localGpsNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (localGpsNetwork != null) {
-                    locationNetwork = localGpsNetwork
-                }
+            .setNegativeButton("No") { dialog, id ->
+                dialog.cancel()
+                finish()
             }
-        }
-        else
-        {
-          //  Toast.makeText(this@LocationActivity, "No signal", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-        }
+        val alert: AlertDialog = builder.create()
+        alert.show()
+
+
     }
 
-    private fun myLocations(locationGps: Location?, locationNetwork: Location?) {
+    protected fun startLocationUpdates() {
 
-        if (locationGps != null && locationNetwork != null) {
-            if (locationGps.accuracy > locationNetwork.accuracy) {
-               // Toast.makeText(this@LocationActivity, "Network stronger", Toast.LENGTH_SHORT).show()
-                updateLocation(locationNetwork.longitude, locationNetwork.latitude)
-            } else {
-               // Toast.makeText(this@LocationActivity, "Gps", Toast.LENGTH_SHORT).show()
-                updateLocation(locationGps.longitude, locationGps.latitude)
-            }
+        // Create the location request to start receiving updates
+
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest!!.setInterval(INTERVAL)
+        mLocationRequest!!.setFastestInterval(FASTEST_INTERVAL)
+
+        // Create LocationSettingsRequest object using location request
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest!!)
+        val locationSettingsRequest = builder.build()
+
+        val settingsClient = LocationServices.getSettingsClient(this)
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+            return
         }
-        else if (locationGps == null)
-        {
-           // Toast.makeText(this@LocationActivity, "Network only", Toast.LENGTH_SHORT).show()
-            updateLocation(locationNetwork!!.longitude, locationNetwork.latitude)
-        }
-        else if (locationNetwork == null)
-        {
-           // Toast.makeText(this@LocationActivity, "Gps only", Toast.LENGTH_SHORT).show()
-            updateLocation(locationGps.longitude, locationGps.latitude)
-        }
-       // else
-        //Toast.makeText(this@LocationActivity, "None", Toast.LENGTH_SHORT).show()
+        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
+            Looper.myLooper())
     }
 
-    private fun updateLocation(longitude: Double, latitude: Double) {
-        if (firstUpdate) {
-            Toast.makeText(this@LocationActivity, "Done!", Toast.LENGTH_SHORT).show()
+    fun onLocationChanged(location: Location) {
+        // New location has now been determined
+
+        mLastLocation = location
+        sendLocation(mLastLocation.longitude, mLastLocation.latitude)
+    }
+
+    private fun stoplocationUpdates() {
+        mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
+    }
+
+    private fun sendLocation(longitude: Double, latitude: Double) {
+        if (firstUpdate)
+        {
             firstUpdate = false
+            Toast.makeText(this@LocationActivity, "Done!", Toast.LENGTH_SHORT).show()
         }
-            FirebaseDatabase.getInstance().reference.child("users").child(uid!!).child("latitude").setValue(latitude)
-        FirebaseDatabase.getInstance().reference.child("users").child(uid!!).child("longitude").setValue(longitude)
+        FirebaseDatabase.getInstance().reference.child("users").child(uid.toString()).child("latitude").setValue(latitude)
+        FirebaseDatabase.getInstance().reference.child("users").child(uid.toString()).child("longitude").setValue(longitude)
     }
-
-
 
 }
+
+
+
+
