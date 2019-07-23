@@ -24,6 +24,6 @@ This app has several key features which include :
 - Primary function is to enable quick calling of close and trusted friends/authorities .
 - Plans to add "Secure Calling" of non-app users in the future (Extension Features)
 
-5) Location Tracking Function (Yet to be added)
+5) Location Tracking Function
 - Ability for your friends to track you in real time with great accuracy.
-- Ability to see all users if enabled for "safe purposes". 
+- Ability to see all users if enabled for "safe purposes". (Extension Features)
